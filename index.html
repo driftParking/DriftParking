@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DriftParking | Trajectory Modeling via Drifting Field for End-to-End Automated Parking</title>
+    <meta
+      name="description"
+      content="DriftParking: trajectory modeling via drifting field for end-to-end automated parking."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="scroll-meter" aria-hidden="true"></div>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-backdrop" aria-hidden="true"></div>
+
+        <div class="hero-content reveal">
+          <p class="eyebrow">End-to-End Automated Parking</p>
+          <h1>DriftParking</h1>
+          <p class="subtitle">Trajectory Modeling via Drifting Field for End-to-End Automated Parking</p>
+
+          <div class="authors">
+            <span class="author-item"><a href="mailto:zyw872531@gmail.com" class="author-mail">Ziyan Wang</a></span>
+            <span class="author-item"><a href="mailto:Lee_2013@126.com" class="author-mail">Dong Li</a><sup>*†</sup></span>
+            <span class="author-item"><a href="mailto:weibowang1188@163.com" class="author-mail">Weibo Wang</a></span>
+            <span class="author-item"><a href="mailto:yinyinlu@gmail.com" class="author-mail">Yinyin Lu</a></span>
+            <span class="author-item"><a href="mailto:17621756012@163.com" class="author-mail">Jiayu Xie</a></span>
+            <span class="author-item"><a href="mailto:15106201070@163.com" class="author-mail">Jiamao Gu</a></span>
+            <span class="author-item">Dongpeng Zhang</span>
+          </div>
+          <div class="role-note">
+            <span>* Corresponding Author</span>
+            <span>† Project Leader :  Dong Li </span>
+          </div>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#abstract">Paper Overview</a>
+            <a class="button" href="#video">Video</a>
+            <a class="button" href="#motivation">Motivation</a>
+            <a class="button" href="#method">Method</a>
+            <a class="button" href="#results">Results</a>
+            <a class="button" href="#dataset">Dataset</a>
+            <a class="button" href="#bibtex">BibTeX</a>
+          </div>
+        </div>
+
+        <div class="hero-stats reveal" aria-label="Key highlights">
+          <div class="stat-card accent-rose">
+            <div class="stat-value-wrap">
+              <strong data-count="97" data-format="integer">97</strong><span>%</span>
+            </div>
+            <p>Real-vehicle parking success</p>
+          </div>
+          <div class="stat-card accent-lilac">
+            <div class="stat-value-wrap">
+              <strong data-count="0.0338" data-format="decimal">0.0338</strong><span>m</span>
+            </div>
+            <p>Final displacement error</p>
+          </div>
+          <div class="stat-card accent-sand">
+            <div class="stat-value-wrap">
+              <strong data-count="42.3" data-format="decimal">42.3</strong>
+            </div>
+            <p>FPS inference speed</p>
+          </div>
+          <div class="stat-card accent-sky">
+            <div class="stat-value-wrap">
+              <strong data-count="0.00" data-format="percent">0.00</strong><span>%</span>
+            </div>
+            <p>Miss rate @ 0.5 m</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section intro reveal" id="abstract">
+        <div class="section-heading">
+          <p class="eyebrow">Overview</p>
+          <h2>Abstract</h2>
+        </div>
+
+        <p class="lead">
+          Automated parking requires generating complete and executable trajectories in highly constrained
+          spaces with low tolerance for goal-pose error. Existing end-to-end parking methods struggle to
+          jointly achieve inference efficiency, trajectory quality, and precise endpoint alignment, while
+          conventional imitation objectives provide limited supervision on structured deviations from expert
+          maneuver geometry. We propose DriftParking, a one-step trajectory generation framework that
+          reconstructs the drifting-field paradigm for high-precision conditional trajectory generation.
+          Specifically, we replace distribution-level attraction with conditional one-to-one attraction toward
+          the paired expert trajectory, introduce expert-centered constructive repulsion, and adaptively
+          attenuate repulsion near convergence. We further formulate trajectory generation in an
+          endpoint-residual space by decomposing each trajectory into a start-to-goal baseline and a learnable
+          residual, turning endpoint alignment into a representation-level structural constraint on the
+          supervision target while providing a structured space for repulsive supervision. DriftParking
+          achieves state-of-the-art performance across all evaluation metrics. Closed-loop on-vehicle
+          experiments across diverse parking scenarios further show a 97% parking success rate,
+          demonstrating strong zero-shot generalization.
+        </p>
+
+        <div class="feature-strip">
+          <span>One-step trajectory generation</span>
+          <span>Endpoint-residual modeling</span>
+          <span>Constructive repulsion</span>
+          <span>Zero-shot generalization</span>
+        </div>
+      </section>
+
+      <section class="section video-section reveal" id="video">
+        <div class="section-heading video-heading">
+          <p class="eyebrow">Video</p>
+          <h2>Parking Video</h2>
+          <span class="video-speed-note">All videos are played at 2x speed.</span>
+        </div>
+
+        <div class="video-grid">
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/5_h264.mp4"></video>
+            <span>Standard outdoor parking slot during heavy rain</span>
+          </div>
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/6_h264.mp4"></video>
+            <span>Outdoor parking slot adjacent to a vehicle during heavy rain</span>
+          </div>
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/7_h264.mp4"></video>
+            <span>Underground dead end parking slot</span>
+          </div>
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/8_h264.mp4"></video>
+            <span>Standard underground parking slot</span>
+          </div>
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/1_h264.mp4"></video>
+            <span>Outdoor U-shaped parking slot</span>
+          </div>
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/2_h264.mp4"></video>
+            <span>Grass-paved parking space</span>
+          </div>
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/3_h264.mp4"></video>
+            <span>Underground U-shaped parking slot</span>
+          </div>
+          <div class="video-card">
+            <video controls autoplay muted loop playsinline preload="auto" src="res/4_h264.mp4"></video>
+            <span>Standard outdoor parking slot</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split" id="motivation">
+        <div class="copy reveal">
+          <p class="eyebrow">Motivation</p>
+          <h2>Why DriftParking?</h2>
+          <p>
+            Existing end-to-end parking methods often predict short-horizon trajectories or rely on iterative
+            generative inference. In parking, however, the planner must satisfy strict goal-pose constraints,
+            maintain smooth and executable geometry, and run with low latency.
+          </p>
+          <p>
+            DriftParking shifts the learning target into residual trajectory space and explicitly teaches the
+            model what not to generate. Constructed negative residuals model three representative failure
+            patterns: lateral deviation, curvature distortion, and high-frequency oscillation.
+          </p>
+
+          <div class="mini-grid">
+            <div>
+              <strong>One-step generation</strong>
+              <span>No iterative denoising or numerical rollout at inference.</span>
+            </div>
+            <div>
+              <strong>Endpoint-residual representation</strong>
+              <span>Start-to-goal baseline + residual trajectory.</span>
+            </div>
+            <div>
+              <strong>Constructive repulsion</strong>
+              <span>Physically meaningful negative trajectories shape the learned field.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="media-panel reveal">
+          <figure class="figure-card motivation-figure">
+            <img
+              src="res/negative_samples.png"
+              alt="Representative negative trajectory patterns used to motivate constructive repulsion."
+            />
+            <figcaption>Representative negative trajectory patterns used to motivate constructive repulsion.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section visual-band reveal" id="method">
+        <div class="section-heading">
+          <p class="eyebrow">Method</p>
+          <h2>Framework</h2>
+        </div>
+
+        <figure class="architecture-panel reveal">
+          <figcaption>Overall architecture of DriftParking</figcaption>
+          <img
+            class="architecture-image"
+            src="res/DriftPark_Diagram_0831_v8.png"
+            alt="Overall architecture of DriftParking"
+          />
+          <figcaption class="figure-description">
+            The Condition Encoder processes surround-view images via DINOv3 + LSS and fuses them with the
+            goal heatmap via cross-attention to produce a BEV feature map. The DiT-based Trajectory Generator
+            predicts the residual trajectory, which is combined with the interpolated baseline to form the full
+            trajectory. The constructive repulsive drifting field applies attraction toward the ground-truth
+            residual and repulsion from analytically constructed negatives during training.
+          </figcaption>
+        </figure>
+
+        <div class="method-grid">
+          <article class="method-card">
+            <span class="tag tag-rose">01</span>
+            <h3>Condition Encoder</h3>
+            <p>DINOv3 + LSS builds surround-view BEV features and fuses them with a goal heatmap and goal-yaw embedding.</p>
+          </article>
+          <article class="method-card">
+            <span class="tag tag-lilac">02</span>
+            <h3>Residual Generator</h3>
+            <p>A conditional DiT predicts the residual trajectory, focusing model capacity on trajectory shape rather than endpoint placement.</p>
+          </article>
+          <article class="method-card">
+            <span class="tag tag-sand">03</span>
+            <h3>Drifting Field</h3>
+            <p>Paired attraction pulls predictions toward expert residuals while analytically constructed negatives supply repulsive supervision.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section results" id="results">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Experiments</p>
+          <h2>Strong performance across real-world parking scenarios</h2>
+        </div>
+
+        <div class="stats-grid reveal">
+          <div class="stat-card accent-rose">
+            <strong>97%</strong>
+            <span>parking success rate</span>
+          </div>
+          <div class="stat-card accent-lilac">
+            <strong>0.0338 m</strong>
+            <span>final displacement error</span>
+          </div>
+          <div class="stat-card accent-sand">
+            <strong>42.3</strong>
+            <span>FPS inference speed</span>
+          </div>
+          <div class="stat-card accent-sky">
+            <strong>0.00%</strong>
+            <span>miss rate at 0.5 m</span>
+          </div>
+        </div>
+
+        <div class="experiment-panel reveal">
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">Benchmark</p>
+            <h2>Trajectory generation quality on DriftParking-Real</h2>
+          </div>
+
+          <div class="table-wrap">
+            <table class="kpi-table">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>L2 Dis. ↓</th>
+                  <th>FDE ↓</th>
+                  <th>MissRat@0.5 ↓</th>
+                  <th>Haus. Dis. ↓</th>
+                  <th>FPS ↑</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ParkingE2E</td>
+                  <td>0.3573</td>
+                  <td>0.1403</td>
+                  <td>1.54%</td>
+                  <td>0.1899</td>
+                  <td>3.38</td>
+                </tr>
+                <tr>
+                  <td>Dino-Diffusion-Parking</td>
+                  <td>0.2236</td>
+                  <td>0.2650</td>
+                  <td>10.47%</td>
+                  <td>0.3121</td>
+                  <td>11.96</td>
+                </tr>
+                <tr>
+                  <td>Transfuser</td>
+                  <td>0.2173</td>
+                  <td>0.1081</td>
+                  <td>0.47%</td>
+                  <td>0.1792</td>
+                  <td>40.71</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>DriftParking (Ours)</strong></td>
+                  <td><strong>0.1725</strong></td>
+                  <td><strong>0.0338</strong></td>
+                  <td><strong>0.00%</strong></td>
+                  <td><strong>0.0845</strong></td>
+                  <td><strong>42.3</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="experiment-panel reveal">
+          <div class="section-heading compact-heading">
+            <p class="eyebrow">On-vehicle validation</p>
+            <h2>Five real garages, diverse parking scenarios, and dead-end cases</h2>
+          </div>
+
+          <figure class="garage-visual">
+            <img src="res/Five_Garage.png" alt="Five real garages and diverse parking scenarios" />
+          </figure>
+
+          <div class="garage-grid">
+            <div class="garage-card">
+              <span>Garage I</span>
+              <strong>97.6%</strong>
+            </div>
+            <div class="garage-card">
+              <span>Garage II</span>
+              <strong>90.0%</strong>
+            </div>
+            <div class="garage-card">
+              <span>Garage III</span>
+              <strong>100%</strong>
+            </div>
+            <div class="garage-card">
+              <span>Garage IV</span>
+              <strong>100%</strong>
+            </div>
+            <div class="garage-card">
+              <span>Garage V</span>
+              <strong>100%</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section dark-panel" id="dataset">
+        <div class="dataset-wrap reveal">
+          <div>
+            <p class="eyebrow light">Dataset</p>
+            <h2>DriftParking-Real</h2>
+            <p>
+              A real-world parking trajectory dataset with synchronized four-channel fisheye images,
+              target goal pose, and trajectory waypoints. It covers standard two-stage maneuvers and
+              three-stage dead-end maneuvers.
+            </p>
+          </div>
+
+          <div class="dataset-stats">
+            <div>
+              <strong>361</strong>
+              <span>complete sequences</span>
+            </div>
+            <div>
+              <strong>48,721</strong>
+              <span>train + validation frames</span>
+            </div>
+            <div>
+              <strong>4</strong>
+              <span>surround cameras</span>
+            </div>
+            <div>
+              <strong>5</strong>
+              <span>evaluated garages</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section bibtex reveal" id="bibtex">
+        <div class="section-heading">
+          <p class="eyebrow">Citation</p>
+          <h2>BibTeX</h2>
+        </div>
+
+        <pre class="bibcode"><code>@article{driftparking2026,
+  title   = {DriftParking: Trajectory Modeling via Drifting Field for End-to-End Automated Parking},
+  author  = {Ziyan Wang, Dong Li, Weibo Wang, Yinyin Lu, Jiayu Xie, Jiamao Gu, Dongpeng Zhang},
+  journal = {Preprint},
+  year    = {2026}
+}</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-wrap">
+        <span>DriftParking Project Page</span>
+        <span>Trajectory Modeling via Drifting Field for End-to-End Automated Parking</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
